@@ -1,2 +1,47 @@
-# offline-docx-xlsx-reader
-offline docx reader app
+# Offline DOCX/XLSX Reader
+
+Eine werbefreie, vollständig offline arbeitende Android-App zum **Anzeigen von .docx- und .xlsx-Dateien** (nur Lesen). Die Dateien werden lokal über `content://`-URIs geöffnet – ohne Cloud, ohne Tracking, ohne Netzwerkzugriffe.
+
+## Features
+
+- ✅ Öffnen über **Datei-Dialog (Storage Access Framework)**
+- ✅ Unterstützung für **"Öffnen mit" / Teilen** (`ACTION_VIEW`, `ACTION_SEND`)
+- ✅ **DOCX-Anzeige** mit einfacher Formatierung (Überschriften, Absätze, Listen)
+- ✅ **XLSX-Anzeige** mit Sheet-Auswahl (Dropdown) und Tabellenansicht
+- ✅ **Alles kopieren** (DOCX: Text, XLSX: TSV des aktuellen Sheets)
+- ✅ **Teilen** der kopierten Inhalte als `text/plain`
+- ✅ **Offline & ohne Tracking**
+
+## Screenshots
+
+> Platzhalter – Screenshots folgen
+
+- `screenshots/docx.png`
+- `screenshots/xlsx.png`
+
+## Build & Run
+
+1. Repository klonen
+2. In **Android Studio** öffnen
+3. Gradle-Sync ausführen
+4. App starten (minSdk 26)
+
+CLI (optional):
+
+```bash
+./gradlew :app:assembleDebug
+```
+
+## Datenschutz
+
+Diese App ist **vollständig offline**. Es gibt **keinerlei Tracking**, **keine Werbung** und **keine Netzwerk-Requests**. Alle Dokumente bleiben lokal auf deinem Gerät.
+
+## Roadmap
+
+- 🔍 Volltextsuche in Dokumenten
+- 📄 PDF-Export aus DOCX/XLSX
+- 🗂 Letzte Dateien / Verlauf
+
+## Lizenz
+
+MIT – siehe `LICENSE` im Repository.

@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Offline DOCX/XLSX Reader</string>
+    <string name="button_open">Datei öffnen</string>
+    <string name="button_copy_all">Alles kopieren</string>
+    <string name="button_share">Teilen</string>
+    <string name="sheet_selector_hint">Sheet auswählen</string>
+    <string name="error_open_failed">Datei konnte nicht geöffnet werden.</string>
+    <string name="error_wrong_format">Das Format wird nicht unterstützt.</string>
+    <string name="toast_copy_done">In Zwischenablage kopiert.</string>
+    <string name="toast_share_failed">Teilen fehlgeschlagen.</string>
+</resources>
