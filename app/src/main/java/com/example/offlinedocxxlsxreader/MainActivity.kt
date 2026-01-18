@@ -379,8 +379,7 @@ class MainActivity : AppCompatActivity() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PageViewHolder {
             val view = LayoutInflater.from(parent.context)
                 .inflate(R.layout.item_pdf_page, parent, false)
-            val imageView = view.findViewById<ImageView>(R.id.pdfPageImage)
-            return PageViewHolder(imageView)
+            return PageViewHolder(view)
         }
 
         override fun onBindViewHolder(holder: PageViewHolder, position: Int) {
@@ -401,6 +400,8 @@ class MainActivity : AppCompatActivity() {
 
         override fun getItemCount(): Int = renderer.pageCount
 
-        class PageViewHolder(val imageView: ImageView) : RecyclerView.ViewHolder(imageView)
+        class PageViewHolder(itemView: android.view.View) : RecyclerView.ViewHolder(itemView) {
+            val imageView: ImageView = itemView.findViewById(R.id.pdfPageImage)
+        }
     }
 }
