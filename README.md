@@ -1,6 +1,6 @@
 # Offline DOCX/XLSX Reader
 
-Eine werbefreie, vollständig offline arbeitende Android-App zum **Anzeigen von .docx- und .xlsx-Dateien** (nur Lesen). Die Dateien werden lokal über `content://`-URIs geöffnet – ohne Cloud, ohne Tracking, ohne Netzwerkzugriffe.
+Eine werbefreie, vollständig offline arbeitende Android-App zum **Anzeigen von .docx-, .xlsx- und .pdf-Dateien** (nur Lesen). Die Dateien werden lokal über `content://`-URIs geöffnet – ohne Cloud, ohne Tracking, ohne Netzwerkzugriffe.
 
 ## Features
 
@@ -8,12 +8,12 @@ Eine werbefreie, vollständig offline arbeitende Android-App zum **Anzeigen von 
 - ✅ Unterstützung für **"Öffnen mit" / Teilen** (`ACTION_VIEW`, `ACTION_SEND`)
 - ✅ **DOCX-Anzeige** mit einfacher Formatierung (Überschriften, Absätze, Listen)
 - ✅ **XLSX-Anzeige** mit Sheet-Auswahl (Dropdown) und Tabellenansicht
-- ✅ **Text markieren, kopieren und teilen**
+- ✅ **PDF-Anzeige** (Bonus, nur Darstellung; Text-Export ggf. eingeschränkt)
+- ✅ **Text markieren, kopieren und teilen** (DOCX/XLSX)
 - ✅ **Alles kopieren** (DOCX: Text, XLSX: TSV des aktuellen Sheets)
 - ✅ **Teilen** der kopierten Inhalte als `text/plain`
 - ✅ **Unterstützt Bildschirmrotation** (Dokument bleibt sichtbar)
-- ✅ **Getestet mit DOCX und XLSX**
-- ✅ **Offline & ohne Tracking**
+- ✅ **Offline & werbefrei** (keine Netzwerkzugriffe)
 
 ## Status
 
@@ -56,8 +56,9 @@ Alle Dokumente bleiben lokal auf deinem Gerät.
 ## Roadmap (optional)
 
 - 🔍 Volltextsuche in Dokumenten
-- 📄 PDF-Export aus DOCX/XLSX
-- 📊 Bessere Tabellenansicht
+- 📄 PDF-Export
+- 🔤 Schriftgröße anpassen
+- 🔊 Vorlesen (TTS)
 
 ## Lizenz
 
