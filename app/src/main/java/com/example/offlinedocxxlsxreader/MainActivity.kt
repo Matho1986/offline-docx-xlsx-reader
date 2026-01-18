@@ -25,6 +25,9 @@ class MainActivity : AppCompatActivity() {
     private val docxReader = DocxReader()
     private val xlsxReader = XlsxReader()
 
+    private var currentUri: Uri? = null
+    private var currentFileType: String? = null
+    private var currentSheetName: String? = null
     private var currentShareText: String? = null
     private var currentXlsxContent: XlsxReader.XlsxContent? = null
 
@@ -42,12 +45,35 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         setupWebView()
         setupUi()
-        handleIncomingIntent(intent)
+
+        val restoredUri = savedInstanceState?.getParcelable<Uri>(STATE_URI)
+        val restoredType = savedInstanceState?.getString(STATE_FILE_TYPE)
+        currentSheetName = savedInstanceState?.getString(STATE_SHEET_NAME)
+        currentShareText = savedInstanceState?.getString(STATE_SHARE_TEXT)
+        currentUri = restoredUri
+        currentFileType = restoredType
+
+        if (restoredUri != null && restoredType != null) {
+            when (restoredType) {
+                FILE_TYPE_DOCX -> loadDocx(restoredUri)
+                FILE_TYPE_XLSX -> loadXlsx(restoredUri)
+            }
+        } else {
+            handleIncomingIntent(intent)
+        }
     }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         handleIncomingIntent(intent)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putParcelable(STATE_URI, currentUri)
+        outState.putString(STATE_FILE_TYPE, currentFileType)
+        outState.putString(STATE_SHEET_NAME, currentSheetName)
+        outState.putString(STATE_SHARE_TEXT, currentShareText)
     }
 
     private fun setupUi() {
@@ -81,6 +107,7 @@ class MainActivity : AppCompatActivity() {
             currentXlsxContent?.sheets?.getOrNull(position)?.let { sheet ->
                 showHtml(sheet.html)
                 currentShareText = sheet.tsv
+                currentSheetName = sheet.name
             }
         }
     }
@@ -127,8 +154,16 @@ class MainActivity : AppCompatActivity() {
 
         val mimeType = contentResolver.getType(uri) ?: guessMimeType(uri)
         when (mimeType) {
-            MIME_DOCX -> loadDocx(uri)
-            MIME_XLSX -> loadXlsx(uri)
+            MIME_DOCX -> {
+                currentUri = uri
+                currentFileType = FILE_TYPE_DOCX
+                loadDocx(uri)
+            }
+            MIME_XLSX -> {
+                currentUri = uri
+                currentFileType = FILE_TYPE_XLSX
+                loadXlsx(uri)
+            }
             else -> Toast.makeText(this, getString(R.string.error_wrong_format), Toast.LENGTH_SHORT).show()
         }
     }
@@ -188,10 +223,13 @@ class MainActivity : AppCompatActivity() {
                     content.sheets.map { it.name }
                 )
                 binding.sheetSelector.setAdapter(adapter)
-                binding.sheetSelector.setText(content.sheets.first().name, false)
-                val firstSheet = content.sheets.first()
-                currentShareText = firstSheet.tsv
-                showHtml(firstSheet.html)
+                val selectedSheet = currentSheetName?.let { name ->
+                    content.sheets.firstOrNull { it.name == name }
+                } ?: content.sheets.first()
+                currentSheetName = selectedSheet.name
+                binding.sheetSelector.setText(selectedSheet.name, false)
+                currentShareText = selectedSheet.tsv
+                showHtml(selectedSheet.html)
             }.onFailure {
                 showError()
             }
@@ -215,5 +253,11 @@ class MainActivity : AppCompatActivity() {
     companion object {
         private const val MIME_DOCX = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         private const val MIME_XLSX = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        private const val FILE_TYPE_DOCX = "docx"
+        private const val FILE_TYPE_XLSX = "xlsx"
+        private const val STATE_URI = "state_uri"
+        private const val STATE_FILE_TYPE = "state_file_type"
+        private const val STATE_SHEET_NAME = "state_sheet_name"
+        private const val STATE_SHARE_TEXT = "state_share_text"
     }
 }
