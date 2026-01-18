@@ -8,9 +8,21 @@ Eine werbefreie, vollständig offline arbeitende Android-App zum **Anzeigen von 
 - ✅ Unterstützung für **"Öffnen mit" / Teilen** (`ACTION_VIEW`, `ACTION_SEND`)
 - ✅ **DOCX-Anzeige** mit einfacher Formatierung (Überschriften, Absätze, Listen)
 - ✅ **XLSX-Anzeige** mit Sheet-Auswahl (Dropdown) und Tabellenansicht
+- ✅ **Text markieren, kopieren und teilen**
 - ✅ **Alles kopieren** (DOCX: Text, XLSX: TSV des aktuellen Sheets)
 - ✅ **Teilen** der kopierten Inhalte als `text/plain`
+- ✅ **Unterstützt Bildschirmrotation** (Dokument bleibt sichtbar)
+- ✅ **Getestet mit DOCX und XLSX**
 - ✅ **Offline & ohne Tracking**
+
+## Status
+
+- MVP abgeschlossen
+- Stabil für den Alltagsgebrauch
+
+## Getestet auf
+
+- Android Smartphone (z. B. Samsung, aktuelles Android)
 
 ## Screenshots
 
@@ -34,13 +46,18 @@ CLI (optional):
 
 ## Datenschutz
 
-Diese App ist **vollständig offline**. Es gibt **keinerlei Tracking**, **keine Werbung** und **keine Netzwerk-Requests**. Alle Dokumente bleiben lokal auf deinem Gerät.
+- Keine Werbung
+- Kein Tracking
+- Keine Cloud
+- Komplett offline
 
-## Roadmap
+Alle Dokumente bleiben lokal auf deinem Gerät.
+
+## Roadmap (optional)
 
 - 🔍 Volltextsuche in Dokumenten
 - 📄 PDF-Export aus DOCX/XLSX
-- 🗂 Letzte Dateien / Verlauf
+- 📊 Bessere Tabellenansicht
 
 ## Lizenz
 
