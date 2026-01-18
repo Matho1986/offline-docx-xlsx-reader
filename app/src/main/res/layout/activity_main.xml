@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:padding="12dp"
         android:orientation="horizontal"
-        android:weightSum="3">
+        android:weightSum="2">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonOpen"
@@ -36,13 +36,6 @@
             android:layout_marginStart="8dp"
             android:text="@string/button_copy_all" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/buttonShare"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="8dp"
-            android:text="@string/button_share" />
     </LinearLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -61,10 +54,23 @@
             android:inputType="none" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <WebView
-        android:id="@+id/webView"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:padding="8dp" />
+        android:layout_weight="1">
+
+        <WebView
+            android:id="@+id/webView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="8dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/pdfRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="8dp"
+            android:clipToPadding="false"
+            android:visibility="gone" />
+    </FrameLayout>
 </LinearLayout>

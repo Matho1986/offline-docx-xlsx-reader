@@ -8,4 +8,7 @@
     <string name="error_wrong_format">Das Format wird nicht unterstützt.</string>
     <string name="toast_copy_done">In Zwischenablage kopiert.</string>
     <string name="toast_share_failed">Teilen fehlgeschlagen.</string>
+    <string name="pdf_share_hint">PDF wird nur angezeigt; Text-Export ist noch nicht verfügbar.</string>
+    <string name="pdf_page_content_description">PDF-Seite</string>
+    <string name="toast_pdf_text_unavailable">PDF wird nur angezeigt; kein Text zum Kopieren verfügbar.</string>
 </resources>
