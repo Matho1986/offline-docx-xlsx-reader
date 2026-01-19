@@ -18,9 +18,12 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.ArrayAdapter
+import android.widget.EditText
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
@@ -43,6 +46,10 @@ class MainActivity : AppCompatActivity() {
     private var currentXlsxContent: XlsxReader.XlsxContent? = null
     private var pdfRenderer: PdfRenderer? = null
     private var pdfFileDescriptor: ParcelFileDescriptor? = null
+    private var searchDialog: AlertDialog? = null
+    private var searchInputView: EditText? = null
+    private var searchCountView: TextView? = null
+    private var currentSearchQuery: String? = null
 
     private val openDocumentLauncher = registerForActivityResult(
         ActivityResultContracts.OpenDocument()
@@ -97,6 +104,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
+            R.id.action_search -> {
+                showSearchDialog()
+                true
+            }
             R.id.action_share -> {
                 shareCurrentContent()
                 true
@@ -157,6 +168,10 @@ class MainActivity : AppCompatActivity() {
                 return true
             }
         }
+        binding.webView.setFindListener { _, numberOfMatches, isDoneCounting ->
+            if (!isDoneCounting) return@setFindListener
+            updateSearchCount(numberOfMatches)
+        }
     }
 
     private fun handleIncomingIntent(intent: Intent?) {
@@ -216,6 +231,8 @@ class MainActivity : AppCompatActivity() {
     private fun loadDocx(uri: Uri) {
         binding.sheetSelectorContainer.isVisible = false
         currentXlsxContent = null
+        currentSearchQuery = null
+        binding.webView.clearMatches()
         closePdfRenderer()
         binding.pdfRecyclerView.isVisible = false
         binding.webView.isVisible = true
@@ -243,6 +260,8 @@ class MainActivity : AppCompatActivity() {
     private fun loadXlsx(uri: Uri) {
         binding.sheetSelectorContainer.isVisible = true
         closePdfRenderer()
+        currentSearchQuery = null
+        binding.webView.clearMatches()
         binding.pdfRecyclerView.isVisible = false
         binding.webView.isVisible = true
         binding.toolbar.subtitle = getString(R.string.button_open)
@@ -282,6 +301,8 @@ class MainActivity : AppCompatActivity() {
         binding.sheetSelectorContainer.isVisible = false
         currentXlsxContent = null
         currentShareText = null
+        currentSearchQuery = null
+        binding.webView.clearMatches()
         binding.toolbar.subtitle = getString(R.string.button_open)
         binding.webView.isVisible = false
         binding.pdfRecyclerView.isVisible = true
@@ -319,6 +340,76 @@ class MainActivity : AppCompatActivity() {
             "utf-8",
             null
         )
+    }
+
+    private fun showSearchDialog() {
+        if (currentFileType != FILE_TYPE_DOCX && currentFileType != FILE_TYPE_XLSX) {
+            Toast.makeText(this, getString(R.string.toast_open_file_first), Toast.LENGTH_SHORT).show()
+            return
+        }
+        if (searchDialog?.isShowing == true) {
+            searchInputView?.requestFocus()
+            return
+        }
+        val dialogView = layoutInflater.inflate(R.layout.dialog_search, null)
+        val input = dialogView.findViewById<EditText>(R.id.searchInput)
+        val countView = dialogView.findViewById<TextView>(R.id.searchCount)
+        searchInputView = input
+        searchCountView = countView
+        val existingQuery = currentSearchQuery.orEmpty()
+        input.setText(existingQuery)
+        if (existingQuery.isBlank()) {
+            updateSearchCount(0)
+        } else {
+            binding.webView.findAllAsync(existingQuery)
+        }
+
+        val dialog = AlertDialog.Builder(this)
+            .setTitle(getString(R.string.search_dialog_title))
+            .setView(dialogView)
+            .setNegativeButton(getString(R.string.search_prev), null)
+            .setPositiveButton(getString(R.string.search_next), null)
+            .setNeutralButton(getString(R.string.search_close), null)
+            .create()
+
+        dialog.setOnShowListener {
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener {
+                performSearch(forward = false)
+            }
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                performSearch(forward = true)
+            }
+            dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener {
+                binding.webView.clearMatches()
+                dialog.dismiss()
+            }
+        }
+        dialog.setOnDismissListener {
+            searchDialog = null
+            searchInputView = null
+            searchCountView = null
+        }
+        searchDialog = dialog
+        dialog.show()
+    }
+
+    private fun performSearch(forward: Boolean) {
+        val query = searchInputView?.text?.toString()?.trim().orEmpty()
+        if (query.isBlank()) {
+            currentSearchQuery = null
+            binding.webView.clearMatches()
+            updateSearchCount(0)
+            return
+        }
+        if (currentSearchQuery != query) {
+            currentSearchQuery = query
+            binding.webView.findAllAsync(query)
+        }
+        binding.webView.findNext(forward)
+    }
+
+    private fun updateSearchCount(count: Int) {
+        searchCountView?.text = getString(R.string.search_count, count)
     }
 
     private fun showError() {

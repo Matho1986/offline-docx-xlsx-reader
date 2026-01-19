@@ -11,4 +11,12 @@
     <string name="pdf_share_hint">PDF wird nur angezeigt; Text-Export ist noch nicht verfügbar.</string>
     <string name="pdf_page_content_description">PDF-Seite</string>
     <string name="toast_pdf_text_unavailable">PDF wird nur angezeigt; kein Text zum Kopieren verfügbar.</string>
+    <string name="action_search">Suche</string>
+    <string name="search_dialog_title">Suche</string>
+    <string name="search_hint">Suchbegriff</string>
+    <string name="search_prev">Zurück</string>
+    <string name="search_next">Weiter</string>
+    <string name="search_close">Schließen</string>
+    <string name="search_count">Treffer: %1$d</string>
+    <string name="toast_open_file_first">Bitte erst eine Datei öffnen.</string>
 </resources>
