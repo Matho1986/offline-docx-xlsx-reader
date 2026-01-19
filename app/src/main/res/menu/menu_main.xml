@@ -14,4 +14,8 @@
         android:id="@+id/action_print"
         android:title="@string/action_print"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_font_size"
+        android:title="@string/action_font_size"
+        app:showAsAction="never" />
 </menu>
