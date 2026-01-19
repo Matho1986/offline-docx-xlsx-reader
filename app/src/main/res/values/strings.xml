@@ -19,4 +19,5 @@
     <string name="search_close">Schließen</string>
     <string name="search_count">Treffer: %1$d</string>
     <string name="toast_open_file_first">Bitte erst eine Datei öffnen.</string>
+    <string name="toast_pdf_search_unavailable">Suche ist für PDF aktuell nicht verfügbar.</string>
 </resources>

@@ -298,6 +298,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadPdf(uri: Uri) {
+        currentUri = uri
+        currentFileType = FILE_TYPE_PDF
         binding.sheetSelectorContainer.isVisible = false
         currentXlsxContent = null
         currentShareText = null
@@ -343,6 +345,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showSearchDialog() {
+        if (currentFileType == FILE_TYPE_PDF) {
+            Toast.makeText(this, getString(R.string.toast_pdf_search_unavailable), Toast.LENGTH_SHORT).show()
+            return
+        }
         if (currentFileType != FILE_TYPE_DOCX && currentFileType != FILE_TYPE_XLSX) {
             Toast.makeText(this, getString(R.string.toast_open_file_first), Toast.LENGTH_SHORT).show()
             return

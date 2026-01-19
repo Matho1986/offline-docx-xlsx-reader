@@ -1,65 +1,25 @@
 # Offline DOCX/XLSX Reader
 
-Eine werbefreie, vollständig offline arbeitende Android-App zum **Anzeigen von .docx-, .xlsx- und .pdf-Dateien** (nur Lesen). Die Dateien werden lokal über `content://`-URIs geöffnet – ohne Cloud, ohne Tracking, ohne Netzwerkzugriffe.
+## Unterstützte Formate
 
-## Features
+- DOCX: Anzeige, Kopieren, Teilen, Volltextsuche
+- XLSX: Anzeige, Sheet-Auswahl, Kopieren, Teilen, Volltextsuche
+- PDF: Anzeige (Bonus-Feature)
 
-- ✅ Öffnen über **Datei-Dialog (Storage Access Framework)**
-- ✅ Unterstützung für **"Öffnen mit" / Teilen** (`ACTION_VIEW`, `ACTION_SEND`)
-- ✅ **DOCX-Anzeige** mit einfacher Formatierung (Überschriften, Absätze, Listen)
-- ✅ **XLSX-Anzeige** mit Sheet-Auswahl (Dropdown) und Tabellenansicht
-- ✅ **PDF-Anzeige** (Bonus, nur Darstellung; Text-Export ggf. eingeschränkt)
-- ✅ **Text markieren, kopieren und teilen** (DOCX/XLSX)
-- ✅ **Alles kopieren** (DOCX: Text, XLSX: TSV des aktuellen Sheets)
-- ✅ **Teilen** der kopierten Inhalte als `text/plain`
-- ✅ **Unterstützt Bildschirmrotation** (Dokument bleibt sichtbar)
-- ✅ **Offline & werbefrei** (keine Netzwerkzugriffe)
+**Hinweis:** Volltextsuche ist aktuell nur für DOCX und XLSX verfügbar. PDF wird angezeigt, aber nicht durchsucht.
 
-## Status
+## Eigenschaften
 
-- MVP abgeschlossen
-- Stabil für den Alltagsgebrauch
-
-## Getestet auf
-
-- Android Smartphone (z. B. Samsung, aktuelles Android)
-
-## Screenshots
-
-> Platzhalter – Screenshots folgen
-
-- `screenshots/docx.png`
-- `screenshots/xlsx.png`
-
-## Build & Run
-
-1. Repository klonen
-2. In **Android Studio** öffnen
-3. Gradle-Sync ausführen
-4. App starten (minSdk 26)
-
-CLI (optional):
-
-```bash
-./gradlew :app:assembleDebug
-```
-
-## Datenschutz
-
-- Keine Werbung
-- Kein Tracking
+- Offline
+- Werbefrei
 - Keine Cloud
-- Komplett offline
+- Keine Tracker
+- Rotation-stabil
 
-Alle Dokumente bleiben lokal auf deinem Gerät.
+## Roadmap
 
-## Roadmap (optional)
-
-- 🔍 Volltextsuche in Dokumenten
-- 📄 PDF-Export
-- 🔤 Schriftgröße anpassen
-- 🔊 Vorlesen (TTS)
-
-## Lizenz
-
-MIT – siehe `LICENSE` im Repository.
+- PDF-Volltextsuche (optional)
+- PDF-Export
+- Eigenes PDF schreiben
+- Schriftgröße
+- Vorlesen (TTS)
