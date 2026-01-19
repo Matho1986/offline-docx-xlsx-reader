@@ -1,25 +1,27 @@
 # Offline DOCX/XLSX Reader
 
-## Unterstützte Formate
+## Funktionen
 
-- DOCX: Anzeige, Kopieren, Teilen, Volltextsuche
-- XLSX: Anzeige, Sheet-Auswahl, Kopieren, Teilen, Volltextsuche
-- PDF: Anzeige (Bonus-Feature)
-
-**Hinweis:** Volltextsuche ist aktuell nur für DOCX und XLSX verfügbar. PDF wird angezeigt, aber nicht durchsucht.
+- DOCX: Anzeige, Kopieren, Teilen, Volltextsuche, Drucken, Schriftgröße
+- XLSX: Anzeige, Sheet-Auswahl, Kopieren, Teilen, Volltextsuche, Drucken, Schriftgröße
+- PDF: Anzeige (Bonus)
 
 ## Eigenschaften
 
 - Offline
 - Werbefrei
 - Keine Cloud
-- Keine Tracker
+- WLAN-Druck über Android Print Framework
 - Rotation-stabil
+
+## Hinweise
+
+- Schriftgröße gilt nur für DOCX/XLSX.
+- PDF-Volltextsuche und PDF-Schriftgröße sind aktuell nicht verfügbar.
 
 ## Roadmap
 
-- PDF-Volltextsuche (optional)
+- PDF-Volltextsuche
 - PDF-Export
 - Eigenes PDF schreiben
-- Schriftgröße
 - Vorlesen (TTS)

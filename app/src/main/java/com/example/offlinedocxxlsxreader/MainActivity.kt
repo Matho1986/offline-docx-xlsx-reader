@@ -52,6 +52,9 @@ class MainActivity : AppCompatActivity() {
     private var searchInputView: EditText? = null
     private var searchCountView: TextView? = null
     private var currentSearchQuery: String? = null
+    private val viewerPreferences by lazy {
+        getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+    }
 
     private val openDocumentLauncher = registerForActivityResult(
         ActivityResultContracts.OpenDocument()
@@ -118,6 +121,10 @@ class MainActivity : AppCompatActivity() {
                 printCurrentContent()
                 true
             }
+            R.id.action_font_size -> {
+                showFontSizeDialog()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -178,6 +185,7 @@ class MainActivity : AppCompatActivity() {
             if (!isDoneCounting) return@setFindListener
             updateSearchCount(numberOfMatches)
         }
+        applyTextZoom(getSavedTextZoom())
     }
 
     private fun handleIncomingIntent(intent: Intent?) {
@@ -341,6 +349,7 @@ class MainActivity : AppCompatActivity() {
     private fun showHtml(html: String) {
         binding.pdfRecyclerView.isVisible = false
         binding.webView.isVisible = true
+        applyTextZoom(getSavedTextZoom())
         binding.webView.loadDataWithBaseURL(
             "about:blank",
             html,
@@ -465,6 +474,48 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun showFontSizeDialog() {
+        if (currentFileType != FILE_TYPE_DOCX && currentFileType != FILE_TYPE_XLSX) {
+            Toast.makeText(
+                this,
+                getString(R.string.toast_font_size_unavailable),
+                Toast.LENGTH_SHORT
+            ).show()
+            return
+        }
+        val zoomValues = intArrayOf(80, 100, 120, 140)
+        val zoomLabels = arrayOf(
+            getString(R.string.font_size_small),
+            getString(R.string.font_size_normal),
+            getString(R.string.font_size_large),
+            getString(R.string.font_size_xlarge)
+        )
+        val currentZoom = getSavedTextZoom()
+        val checkedItem = zoomValues.indexOf(currentZoom).takeIf { it >= 0 } ?: DEFAULT_FONT_INDEX
+        AlertDialog.Builder(this)
+            .setTitle(getString(R.string.font_size_title))
+            .setSingleChoiceItems(zoomLabels, checkedItem) { dialog, which ->
+                val selectedZoom = zoomValues[which]
+                saveTextZoom(selectedZoom)
+                applyTextZoom(selectedZoom)
+                dialog.dismiss()
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
+    }
+
+    private fun getSavedTextZoom(): Int {
+        return viewerPreferences.getInt(PREF_TEXT_ZOOM, DEFAULT_TEXT_ZOOM)
+    }
+
+    private fun saveTextZoom(value: Int) {
+        viewerPreferences.edit().putInt(PREF_TEXT_ZOOM, value).apply()
+    }
+
+    private fun applyTextZoom(value: Int) {
+        binding.webView.settings.textZoom = value
+    }
+
     private fun closePdfRenderer() {
         binding.pdfRecyclerView.adapter = null
         pdfRenderer?.close()
@@ -484,6 +535,10 @@ class MainActivity : AppCompatActivity() {
         private const val STATE_FILE_TYPE = "state_file_type"
         private const val STATE_SHEET_NAME = "state_sheet_name"
         private const val STATE_SHARE_TEXT = "state_share_text"
+        private const val PREFS_NAME = "viewer_preferences"
+        private const val PREF_TEXT_ZOOM = "pref_text_zoom"
+        private const val DEFAULT_TEXT_ZOOM = 100
+        private const val DEFAULT_FONT_INDEX = 1
     }
 
     private data class PdfBundle(
