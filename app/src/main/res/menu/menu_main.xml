@@ -10,4 +10,8 @@
         android:id="@+id/action_share"
         android:title="@string/button_share"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_print"
+        android:title="@string/action_print"
+        app:showAsAction="never" />
 </menu>

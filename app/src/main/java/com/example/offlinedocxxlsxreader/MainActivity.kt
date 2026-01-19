@@ -10,6 +10,8 @@ import android.graphics.pdf.PdfRenderer
 import android.net.Uri
 import android.os.Bundle
 import android.os.ParcelFileDescriptor
+import android.print.PrintAttributes
+import android.print.PrintManager
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -110,6 +112,10 @@ class MainActivity : AppCompatActivity() {
             }
             R.id.action_share -> {
                 shareCurrentContent()
+                true
+            }
+            R.id.action_print -> {
+                printCurrentContent()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -439,6 +445,23 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent.createChooser(shareIntent, getString(R.string.button_share)))
         } catch (ex: Exception) {
             Toast.makeText(this, getString(R.string.toast_share_failed), Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun printCurrentContent() {
+        when (currentFileType) {
+            FILE_TYPE_DOCX, FILE_TYPE_XLSX -> {
+                val jobName = "Offline Reader - Druck"
+                val printManager = getSystemService(Context.PRINT_SERVICE) as PrintManager
+                val printAdapter = binding.webView.createPrintDocumentAdapter(jobName)
+                printManager.print(jobName, printAdapter, PrintAttributes.Builder().build())
+            }
+            FILE_TYPE_PDF -> {
+                Toast.makeText(this, getString(R.string.toast_pdf_print_unavailable), Toast.LENGTH_SHORT).show()
+            }
+            else -> {
+                Toast.makeText(this, getString(R.string.toast_open_file_first), Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
