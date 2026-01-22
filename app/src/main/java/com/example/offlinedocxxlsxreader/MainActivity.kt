@@ -12,9 +12,12 @@ import android.os.Bundle
 import android.os.ParcelFileDescriptor
 import android.print.PrintAttributes
 import android.print.PrintManager
+import android.view.GestureDetector
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
+import android.view.MotionEvent
+import android.view.ScaleGestureDetector
 import android.view.ViewGroup
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
@@ -52,6 +55,9 @@ class MainActivity : AppCompatActivity() {
     private var searchInputView: EditText? = null
     private var searchCountView: TextView? = null
     private var currentSearchQuery: String? = null
+    private var pdfScaleFactor = PDF_SCALE_DEFAULT
+    private lateinit var pdfScaleDetector: ScaleGestureDetector
+    private lateinit var pdfGestureDetector: GestureDetector
     private val viewerPreferences by lazy {
         getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     }
@@ -70,6 +76,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         setupWebView()
         setupUi()
+        setupPdfGestures()
 
         val restoredUri = savedInstanceState?.getParcelable<Uri>(STATE_URI)
         val restoredType = savedInstanceState?.getString(STATE_FILE_TYPE)
@@ -164,6 +171,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.pdfRecyclerView.layoutManager = LinearLayoutManager(this)
+        binding.pdfRecyclerView.setOnTouchListener { _, event ->
+            if (currentFileType != FILE_TYPE_PDF) return@setOnTouchListener false
+            pdfScaleDetector.onTouchEvent(event)
+            val gestureHandled = pdfGestureDetector.onTouchEvent(event)
+            pdfScaleDetector.isInProgress || gestureHandled
+        }
     }
 
     private fun setupWebView() {
@@ -314,6 +327,7 @@ class MainActivity : AppCompatActivity() {
     private fun loadPdf(uri: Uri) {
         currentUri = uri
         currentFileType = FILE_TYPE_PDF
+        resetPdfScale()
         binding.sheetSelectorContainer.isVisible = false
         currentXlsxContent = null
         currentShareText = null
@@ -340,10 +354,41 @@ class MainActivity : AppCompatActivity() {
                 pdfRenderer = bundle.renderer
                 val width = resources.displayMetrics.widthPixels
                 binding.pdfRecyclerView.adapter = PdfPageAdapter(bundle.renderer, width)
+                applyPdfScale()
             }.onFailure {
                 showError()
             }
         }
+    }
+
+    private fun setupPdfGestures() {
+        pdfScaleDetector = ScaleGestureDetector(this, object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
+            override fun onScale(detector: ScaleGestureDetector): Boolean {
+                pdfScaleFactor = (pdfScaleFactor * detector.scaleFactor)
+                    .coerceIn(PDF_SCALE_MIN, PDF_SCALE_MAX)
+                applyPdfScale()
+                return true
+            }
+        })
+        pdfGestureDetector = GestureDetector(this, object : GestureDetector.SimpleOnGestureListener() {
+            override fun onDoubleTap(e: MotionEvent): Boolean {
+                if (currentFileType != FILE_TYPE_PDF) return false
+                resetPdfScale()
+                applyPdfScale()
+                return true
+            }
+        })
+    }
+
+    private fun applyPdfScale() {
+        binding.pdfRecyclerView.pivotX = binding.pdfRecyclerView.width / 2f
+        binding.pdfRecyclerView.pivotY = 0f
+        binding.pdfRecyclerView.scaleX = pdfScaleFactor
+        binding.pdfRecyclerView.scaleY = pdfScaleFactor
+    }
+
+    private fun resetPdfScale() {
+        pdfScaleFactor = PDF_SCALE_DEFAULT
     }
 
     private fun showHtml(html: String) {
@@ -539,6 +584,9 @@ class MainActivity : AppCompatActivity() {
         private const val PREF_TEXT_ZOOM = "pref_text_zoom"
         private const val DEFAULT_TEXT_ZOOM = 100
         private const val DEFAULT_FONT_INDEX = 1
+        private const val PDF_SCALE_DEFAULT = 1.0f
+        private const val PDF_SCALE_MIN = 1.0f
+        private const val PDF_SCALE_MAX = 3.0f
     }
 
     private data class PdfBundle(
