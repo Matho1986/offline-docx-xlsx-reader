@@ -2,26 +2,47 @@
 
 ## Funktionen
 
-- DOCX: Anzeige, Kopieren, Teilen, Volltextsuche, Drucken, Schriftgröße
-- XLSX: Anzeige, Sheet-Auswahl, Kopieren, Teilen, Volltextsuche, Drucken, Schriftgröße
-- PDF: Anzeige (Bonus)
+### DOCX
+
+- Anzeige
+- Volltextsuche
+- Kopieren & Teilen
+- Drucken (Android Print Framework)
+- Zoom (2-Finger-Geste)
+
+### XLSX
+
+- Anzeige + Sheet-Auswahl
+- Volltextsuche
+- Kopieren & Teilen
+- Drucken
+- Zoom (2-Finger-Geste)
+
+### PDF (Bonus)
+
+- Anzeige
+- Zoom (2-Finger-Geste)
+- Drucken (wenn implementiert)
+- Hinweis: PDF wird als Seite/Bild gerendert (keine Suche, kein Text kopieren)
+
+## Sprache
+
+- App-UI umschaltbar zwischen:
+  - Deutsch (Standard)
+  - Englisch
+  - Niederländisch
 
 ## Eigenschaften
 
-- Offline
+- Komplett offline
 - Werbefrei
-- Keine Cloud
-- WLAN-Druck über Android Print Framework
+- Keine Cloud / keine Tracker
 - Rotation-stabil
-
-## Hinweise
-
-- Schriftgröße gilt nur für DOCX/XLSX.
-- PDF-Volltextsuche und PDF-Schriftgröße sind aktuell nicht verfügbar.
+- Datenschutzfreundlich
 
 ## Roadmap
 
-- PDF-Volltextsuche
+- PDF-Volltextsuche (optional)
 - PDF-Export
 - Eigenes PDF schreiben
 - Vorlesen (TTS)

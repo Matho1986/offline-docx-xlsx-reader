@@ -38,6 +38,7 @@ import com.example.offlinedocxxlsxreader.databinding.ActivityMainBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -66,6 +67,12 @@ class MainActivity : AppCompatActivity() {
         ActivityResultContracts.OpenDocument()
     ) { uri ->
         uri?.let { handleUri(it, persistable = true) }
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        val prefs = newBase.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val language = prefs.getString(PREF_LANGUAGE, LANGUAGE_DEFAULT) ?: LANGUAGE_DEFAULT
+        super.attachBaseContext(updateLocale(newBase, language))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -130,6 +137,10 @@ class MainActivity : AppCompatActivity() {
             }
             R.id.action_font_size -> {
                 showFontSizeDialog()
+                true
+            }
+            R.id.action_language -> {
+                showLanguageDialog()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -549,6 +560,38 @@ class MainActivity : AppCompatActivity() {
             .show()
     }
 
+    private fun showLanguageDialog() {
+        val languageOptions = arrayOf(
+            getString(R.string.language_option_de),
+            getString(R.string.language_option_en),
+            getString(R.string.language_option_nl)
+        )
+        val languageCodes = arrayOf(LANGUAGE_DE, LANGUAGE_EN, LANGUAGE_NL)
+        val currentLanguage = viewerPreferences.getString(PREF_LANGUAGE, LANGUAGE_DEFAULT) ?: LANGUAGE_DEFAULT
+        val checkedItem = languageCodes.indexOf(currentLanguage).takeIf { it >= 0 } ?: 0
+        AlertDialog.Builder(this)
+            .setTitle(getString(R.string.language_dialog_title))
+            .setSingleChoiceItems(languageOptions, checkedItem) { dialog, which ->
+                val selectedLanguage = languageCodes[which]
+                if (selectedLanguage != currentLanguage) {
+                    viewerPreferences.edit().putString(PREF_LANGUAGE, selectedLanguage).apply()
+                    recreate()
+                } else {
+                    dialog.dismiss()
+                }
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
+    }
+
+    private fun updateLocale(context: Context, language: String): Context {
+        val locale = Locale(language)
+        Locale.setDefault(locale)
+        val config = android.content.res.Configuration(context.resources.configuration)
+        config.setLocale(locale)
+        return context.createConfigurationContext(config)
+    }
+
     private fun getSavedTextZoom(): Int {
         return viewerPreferences.getInt(PREF_TEXT_ZOOM, DEFAULT_TEXT_ZOOM)
     }
@@ -582,11 +625,16 @@ class MainActivity : AppCompatActivity() {
         private const val STATE_SHARE_TEXT = "state_share_text"
         private const val PREFS_NAME = "viewer_preferences"
         private const val PREF_TEXT_ZOOM = "pref_text_zoom"
+        private const val PREF_LANGUAGE = "pref_language"
         private const val DEFAULT_TEXT_ZOOM = 100
         private const val DEFAULT_FONT_INDEX = 1
         private const val PDF_SCALE_DEFAULT = 1.0f
         private const val PDF_SCALE_MIN = 1.0f
         private const val PDF_SCALE_MAX = 3.0f
+        private const val LANGUAGE_DE = "de"
+        private const val LANGUAGE_EN = "en"
+        private const val LANGUAGE_NL = "nl"
+        private const val LANGUAGE_DEFAULT = LANGUAGE_DE
     }
 
     private data class PdfBundle(

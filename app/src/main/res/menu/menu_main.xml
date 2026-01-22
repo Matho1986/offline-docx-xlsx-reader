@@ -18,4 +18,8 @@
         android:id="@+id/action_font_size"
         android:title="@string/action_font_size"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_language"
+        android:title="@string/action_language"
+        app:showAsAction="never" />
 </menu>
