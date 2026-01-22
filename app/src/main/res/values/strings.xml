@@ -23,10 +23,15 @@
     <string name="action_print">Drucken</string>
     <string name="toast_pdf_print_unavailable">Drucken für PDF folgt später.</string>
     <string name="action_font_size">Schriftgröße</string>
+    <string name="action_language">Sprache</string>
     <string name="font_size_title">Schriftgröße</string>
     <string name="font_size_small">Klein (80%)</string>
     <string name="font_size_normal">Normal (100%)</string>
     <string name="font_size_large">Groß (120%)</string>
     <string name="font_size_xlarge">Sehr groß (140%)</string>
     <string name="toast_font_size_unavailable">Schriftgröße ist nur für Textdokumente verfügbar.</string>
+    <string name="language_dialog_title">Sprache wählen</string>
+    <string name="language_option_de">Deutsch</string>
+    <string name="language_option_en">English</string>
+    <string name="language_option_nl">Nederlands</string>
 </resources>

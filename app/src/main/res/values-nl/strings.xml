@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">Offline DOCX/XLSX Reader</string>
+    <string name="button_open">Bestand openen</string>
+    <string name="button_copy_all">Alles kopiëren</string>
+    <string name="button_share">Delen</string>
+    <string name="sheet_selector_hint">Sheet selecteren</string>
+    <string name="error_open_failed">Bestand kon niet worden geopend.</string>
+    <string name="error_wrong_format">Indeling wordt niet ondersteund.</string>
+    <string name="toast_copy_done">Gekopieerd naar klembord.</string>
+    <string name="toast_share_failed">Delen mislukt.</string>
+    <string name="pdf_share_hint">PDF is alleen te bekijken; tekstexport is nog niet beschikbaar.</string>
+    <string name="pdf_page_content_description">PDF-pagina</string>
+    <string name="toast_pdf_text_unavailable">PDF is alleen te bekijken; geen tekst beschikbaar om te kopiëren.</string>
+    <string name="action_search">Zoeken</string>
+    <string name="search_dialog_title">Zoeken</string>
+    <string name="search_hint">Zoekterm</string>
+    <string name="search_prev">Vorige</string>
+    <string name="search_next">Volgende</string>
+    <string name="search_close">Sluiten</string>
+    <string name="search_count">Resultaten: %1$d</string>
+    <string name="toast_open_file_first">Open eerst een bestand.</string>
+    <string name="toast_pdf_search_unavailable">Zoeken is momenteel niet beschikbaar voor PDF.</string>
+    <string name="action_print">Afdrukken</string>
+    <string name="toast_pdf_print_unavailable">Afdrukken voor PDF volgt later.</string>
+    <string name="action_font_size">Tekstgrootte</string>
+    <string name="action_language">Taal</string>
+    <string name="font_size_title">Tekstgrootte</string>
+    <string name="font_size_small">Klein (80%)</string>
+    <string name="font_size_normal">Normaal (100%)</string>
+    <string name="font_size_large">Groot (120%)</string>
+    <string name="font_size_xlarge">Zeer groot (140%)</string>
+    <string name="toast_font_size_unavailable">Tekstgrootte is alleen beschikbaar voor tekstdocumenten.</string>
+    <string name="language_dialog_title">Taal kiezen</string>
+    <string name="language_option_de">Deutsch</string>
+    <string name="language_option_en">English</string>
+    <string name="language_option_nl">Nederlands</string>
+</resources>
