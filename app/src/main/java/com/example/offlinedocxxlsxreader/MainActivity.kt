@@ -57,6 +57,11 @@ class MainActivity : AppCompatActivity() {
     private var searchCountView: TextView? = null
     private var currentSearchQuery: String? = null
     private var pdfScaleFactor = PDF_SCALE_DEFAULT
+    private var pdfTranslationX = 0f
+    private var pdfTranslationY = 0f
+    private var pdfLastTouchX = 0f
+    private var pdfLastTouchY = 0f
+    private var isPdfDragging = false
     private lateinit var pdfScaleDetector: ScaleGestureDetector
     private lateinit var pdfGestureDetector: GestureDetector
     private val viewerPreferences by lazy {
@@ -186,7 +191,50 @@ class MainActivity : AppCompatActivity() {
             if (currentFileType != FILE_TYPE_PDF) return@setOnTouchListener false
             pdfScaleDetector.onTouchEvent(event)
             val gestureHandled = pdfGestureDetector.onTouchEvent(event)
-            pdfScaleDetector.isInProgress || gestureHandled
+
+            if (pdfScaleDetector.isInProgress) {
+                isPdfDragging = false
+                return@setOnTouchListener true
+            }
+
+            when (event.actionMasked) {
+                MotionEvent.ACTION_DOWN -> {
+                    pdfLastTouchX = event.x
+                    pdfLastTouchY = event.y
+                    isPdfDragging = false
+                }
+                MotionEvent.ACTION_POINTER_DOWN -> {
+                    isPdfDragging = false
+                }
+                MotionEvent.ACTION_POINTER_UP -> {
+                    val remainingIndex = if (event.actionIndex == 0) 1 else 0
+                    if (remainingIndex < event.pointerCount) {
+                        pdfLastTouchX = event.getX(remainingIndex)
+                        pdfLastTouchY = event.getY(remainingIndex)
+                    }
+                    isPdfDragging = false
+                }
+                MotionEvent.ACTION_MOVE -> {
+                    if (event.pointerCount == 1 && pdfScaleFactor > PDF_SCALE_DEFAULT) {
+                        val deltaX = event.x - pdfLastTouchX
+                        val deltaY = event.y - pdfLastTouchY
+                        pdfTranslationX += deltaX
+                        pdfTranslationY += deltaY
+                        clampPdfTranslation()
+                        applyPdfScale()
+                        pdfLastTouchX = event.x
+                        pdfLastTouchY = event.y
+                        isPdfDragging = true
+                        return@setOnTouchListener true
+                    }
+                }
+                MotionEvent.ACTION_UP,
+                MotionEvent.ACTION_CANCEL -> {
+                    isPdfDragging = false
+                }
+            }
+
+            pdfScaleDetector.isInProgress || gestureHandled || isPdfDragging
         }
     }
 
@@ -398,12 +446,36 @@ class MainActivity : AppCompatActivity() {
     private fun applyPdfScale() {
         binding.pdfRecyclerView.pivotX = binding.pdfRecyclerView.width / 2f
         binding.pdfRecyclerView.pivotY = 0f
+        if (pdfScaleFactor <= PDF_SCALE_DEFAULT) {
+            pdfTranslationX = 0f
+            pdfTranslationY = 0f
+        } else {
+            clampPdfTranslation()
+        }
         binding.pdfRecyclerView.scaleX = pdfScaleFactor
         binding.pdfRecyclerView.scaleY = pdfScaleFactor
+        binding.pdfRecyclerView.translationX = pdfTranslationX
+        binding.pdfRecyclerView.translationY = pdfTranslationY
     }
 
     private fun resetPdfScale() {
         pdfScaleFactor = PDF_SCALE_DEFAULT
+        pdfTranslationX = 0f
+        pdfTranslationY = 0f
+    }
+
+    private fun clampPdfTranslation() {
+        val width = binding.pdfRecyclerView.width.toFloat()
+        val height = binding.pdfRecyclerView.height.toFloat()
+        if (width <= 0f || height <= 0f) {
+            pdfTranslationX = 0f
+            pdfTranslationY = 0f
+            return
+        }
+        val maxTranslationX = ((width * pdfScaleFactor) - width) / 2f
+        val maxTranslationY = (height * pdfScaleFactor) - height
+        pdfTranslationX = pdfTranslationX.coerceIn(-maxTranslationX, maxTranslationX)
+        pdfTranslationY = pdfTranslationY.coerceIn(-maxTranslationY, 0f)
     }
 
     private fun showHtml(html: String) {
