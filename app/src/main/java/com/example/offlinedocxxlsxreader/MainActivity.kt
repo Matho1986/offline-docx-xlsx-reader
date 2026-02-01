@@ -593,7 +593,7 @@ class MainActivity : AppCompatActivity() {
         when (currentFileType) {
             FILE_TYPE_DOCX, FILE_TYPE_XLSX -> {
                 val jobName = "Offline Reader - Druck"
-                val printManager = getSystemService(Context.PRINT_SERVICE) as PrintManager
+                val printManager = getSystemService(PrintManager::class.java)
                 val printAdapter = binding.webView.createPrintDocumentAdapter(jobName)
                 printManager.print(jobName, printAdapter, PrintAttributes.Builder().build())
             }
