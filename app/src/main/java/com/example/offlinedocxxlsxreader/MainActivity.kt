@@ -138,9 +138,7 @@ class MainActivity : AppCompatActivity() {
                 true
             }
             R.id.action_print -> {
-                runOnUiThread {
-                    printCurrentContent()
-                }
+                printCurrentContent()
                 true
             }
             R.id.action_font_size -> {
@@ -593,14 +591,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun printCurrentContent() {
-        if (this@MainActivity.isFinishing || this@MainActivity.isDestroyed) {
+        if (isFinishing || isDestroyed) {
             return
         }
         when (currentFileType) {
             FILE_TYPE_DOCX, FILE_TYPE_XLSX -> {
                 val jobName = "Offline Reader - Druck"
-                val printManager = (this@MainActivity as Activity)
-                    .getSystemService(Context.PRINT_SERVICE) as PrintManager
+                val printManager = getSystemService(Context.PRINT_SERVICE) as PrintManager
                 val printAdapter = binding.webView.createPrintDocumentAdapter(jobName)
                 printManager.print(jobName, printAdapter, PrintAttributes.Builder().build())
             }
