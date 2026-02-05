@@ -4,6 +4,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.app.Activity
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.pdf.PdfRenderer
@@ -137,7 +138,9 @@ class MainActivity : AppCompatActivity() {
                 true
             }
             R.id.action_print -> {
-                printCurrentContent()
+                runOnUiThread {
+                    printCurrentContent()
+                }
                 true
             }
             R.id.action_font_size -> {
@@ -590,10 +593,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun printCurrentContent() {
+        val activity = this@MainActivity
+        if (activity !is Activity) {
+            Toast.makeText(activity, getString(R.string.toast_print_unavailable), Toast.LENGTH_SHORT).show()
+            return
+        }
+        if (activity.isFinishing || activity.isDestroyed) {
+            return
+        }
         when (currentFileType) {
             FILE_TYPE_DOCX, FILE_TYPE_XLSX -> {
                 val jobName = "Offline Reader - Druck"
-                val printManager = getSystemService(PrintManager::class.java)
+                val printManager = activity.getSystemService(PrintManager::class.java) ?: return
                 val printAdapter = binding.webView.createPrintDocumentAdapter(jobName)
                 printManager.print(jobName, printAdapter, PrintAttributes.Builder().build())
             }
