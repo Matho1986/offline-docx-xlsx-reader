@@ -22,6 +22,7 @@
     <string name="toast_pdf_search_unavailable">Suche ist für PDF aktuell nicht verfügbar.</string>
     <string name="action_print">Drucken</string>
     <string name="toast_pdf_print_unavailable">Drucken für PDF folgt später.</string>
+    <string name="toast_print_unavailable">Drucken ist aktuell nicht verfügbar.</string>
     <string name="action_font_size">Schriftgröße</string>
     <string name="action_language">Sprache</string>
     <string name="font_size_title">Schriftgröße</string>
