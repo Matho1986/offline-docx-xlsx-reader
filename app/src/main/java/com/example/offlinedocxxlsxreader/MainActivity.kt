@@ -593,18 +593,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun printCurrentContent() {
-        val activity = this@MainActivity
-        if (activity !is Activity) {
-            Toast.makeText(activity, getString(R.string.toast_print_unavailable), Toast.LENGTH_SHORT).show()
-            return
-        }
-        if (activity.isFinishing || activity.isDestroyed) {
+        if (this@MainActivity.isFinishing || this@MainActivity.isDestroyed) {
             return
         }
         when (currentFileType) {
             FILE_TYPE_DOCX, FILE_TYPE_XLSX -> {
                 val jobName = "Offline Reader - Druck"
-                val printManager = activity.getSystemService(PrintManager::class.java) ?: return
+                val printManager = this@MainActivity.getSystemService(PrintManager::class.java) ?: return
                 val printAdapter = binding.webView.createPrintDocumentAdapter(jobName)
                 printManager.print(jobName, printAdapter, PrintAttributes.Builder().build())
             }
