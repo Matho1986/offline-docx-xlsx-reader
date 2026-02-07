@@ -76,12 +76,6 @@ class MainActivity : AppCompatActivity() {
         uri?.let { handleUri(it, persistable = true) }
     }
 
-    override fun attachBaseContext(newBase: Context) {
-        val prefs = newBase.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        val language = prefs.getString(PREF_LANGUAGE, LANGUAGE_DEFAULT) ?: LANGUAGE_DEFAULT
-        super.attachBaseContext(updateLocale(newBase, language))
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -108,6 +102,16 @@ class MainActivity : AppCompatActivity() {
         } else {
             handleIncomingIntent(intent)
         }
+    }
+
+    override fun applyOverrideConfiguration(overrideConfiguration: android.content.res.Configuration?) {
+        val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val language = prefs.getString(PREF_LANGUAGE, LANGUAGE_DEFAULT) ?: LANGUAGE_DEFAULT
+        val locale = Locale(language)
+        Locale.setDefault(locale)
+        val config = android.content.res.Configuration(overrideConfiguration ?: resources.configuration)
+        config.setLocale(locale)
+        super.applyOverrideConfiguration(config)
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -688,14 +692,6 @@ class MainActivity : AppCompatActivity() {
             }
             .setNegativeButton(android.R.string.cancel, null)
             .show()
-    }
-
-    private fun updateLocale(context: Context, language: String): Context {
-        val locale = Locale(language)
-        Locale.setDefault(locale)
-        val config = android.content.res.Configuration(context.resources.configuration)
-        config.setLocale(locale)
-        return context.createConfigurationContext(config)
     }
 
     private fun getSavedTextZoom(): Int {
