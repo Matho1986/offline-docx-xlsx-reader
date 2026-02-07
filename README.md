@@ -1,5 +1,14 @@
 # Offline DOCX/XLSX Reader
 
+## Eigenschaften
+
+- Komplett offline
+- Werbefrei
+- Keine Cloud / keine Tracker
+- Keine fremden Rendering-Services (kein Google Docs / Office Online)
+- Datenschutzfreundlich
+- Rotation-stabil
+
 ## Funktionen
 
 ### DOCX
@@ -18,12 +27,13 @@
 - Drucken
 - Zoom (2-Finger-Geste)
 
-### PDF (Bonus)
+### PDF (Viewer)
 
 - Anzeige
 - Zoom (2-Finger-Geste)
 - Drucken (wenn implementiert)
-- Hinweis: PDF wird als Seite/Bild gerendert (keine Suche, kein Text kopieren)
+- Hinweis: Fokus liegt auf stabiler Darstellung, nicht auf Textanalyse
+  (keine Volltextsuche oder Kopierfunktion)
 
 ## Sprache
 
@@ -31,14 +41,6 @@
   - Deutsch (Standard)
   - Englisch
   - Niederländisch
-
-## Eigenschaften
-
-- Komplett offline
-- Werbefrei
-- Keine Cloud / keine Tracker
-- Rotation-stabil
-- Datenschutzfreundlich
 
 ## Roadmap
 

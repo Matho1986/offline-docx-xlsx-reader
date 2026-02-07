@@ -13,7 +13,6 @@ import android.os.Bundle
 import android.os.ParcelFileDescriptor
 import android.print.PrintAttributes
 import android.print.PrintManager
-import android.util.Log
 import android.view.GestureDetector
 import android.view.LayoutInflater
 import android.view.Menu
@@ -596,12 +595,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun printCurrentContent() {
-        Log.e(
-            "PRINT",
-            "printCurrentContent hit currentFileType=$currentFileType isFinishing=$isFinishing " +
-                "isDestroyed=$isDestroyed activity=${this::class.java.name}"
-        )
-        Log.e("PRINT", Log.getStackTraceString(Throwable("PRINT STACK")))
         if (isFinishing || isDestroyed) {
             return
         }
@@ -609,7 +602,6 @@ class MainActivity : AppCompatActivity() {
             FILE_TYPE_DOCX, FILE_TYPE_XLSX -> {
                 val jobName = "Offline Reader - Druck"
                 val printManager = getSystemService(Context.PRINT_SERVICE) as PrintManager
-                Log.e("PRINT", "printManager instance=$printManager")
                 val printAdapter = binding.webView.createPrintDocumentAdapter(jobName)
                 printManager.print(jobName, printAdapter, PrintAttributes.Builder().build())
             }
@@ -623,7 +615,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun debugPrintWithFreshWebView() {
-        Log.e("PRINT", "debugPrintWithFreshWebView start")
         val webView = WebView(this)
         webView.settings.javaScriptEnabled = false
         webView.loadData(
@@ -635,7 +626,6 @@ class MainActivity : AppCompatActivity() {
             val jobName = "Offline Reader - Debug Print"
             val printManager = getSystemService(Context.PRINT_SERVICE) as PrintManager
             val printAdapter = webView.createPrintDocumentAdapter(jobName)
-            Log.e("PRINT", "debugPrintWithFreshWebView print called")
             printManager.print(jobName, printAdapter, PrintAttributes.Builder().build())
         }
     }
