@@ -63,12 +63,14 @@
             android:id="@+id/webView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/content_view_background"
             android:padding="8dp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/pdfRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/content_view_background"
             android:padding="8dp"
             android:clipToPadding="false"
             android:visibility="gone" />
