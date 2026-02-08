@@ -2,12 +2,19 @@ package com.example.offlinedocxxlsxreader
 
 object HtmlTemplates {
     private const val BASE_CSS = """
+        :root {
+            color-scheme: light dark;
+        }
         body {
             font-family: sans-serif;
             line-height: 1.6;
             color: #111827;
             margin: 16px;
             max-width: 960px;
+        }
+        a,
+        a:visited {
+            color: #2563eb;
         }
         h1, h2, h3, h4, h5, h6 {
             color: #1e3a8a;
@@ -30,6 +37,26 @@ object HtmlTemplates {
         }
         .table-container {
             overflow-x: auto;
+        }
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: #000000;
+                color: #ffffff;
+            }
+            a,
+            a:visited {
+                color: #93c5fd;
+            }
+            h1, h2, h3, h4, h5, h6 {
+                color: #bfdbfe;
+            }
+            table {
+                background-color: #000000;
+            }
+            th, td {
+                background-color: #000000;
+                border-color: #374151;
+            }
         }
     """
 
