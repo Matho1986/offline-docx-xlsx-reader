@@ -7,6 +7,14 @@
         android:title="@string/action_search"
         app:showAsAction="ifRoom" />
     <item
+        android:id="@+id/action_new"
+        android:title="@string/action_new"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_save_as"
+        android:title="@string/action_save_as"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_share"
         android:title="@string/button_share"
         app:showAsAction="never" />

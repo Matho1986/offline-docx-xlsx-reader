@@ -27,13 +27,32 @@
 - Drucken
 - Zoom (2-Finger-Geste)
 
-### PDF (Viewer)
+### Textformate
 
-- Anzeige
-- Zoom (2-Finger-Geste)
-- Drucken (wenn implementiert)
-- Hinweis: Fokus liegt auf stabiler Darstellung, nicht auf Textanalyse
-  (keine Volltextsuche oder Kopierfunktion)
+Unterstützte Formate:
+
+- `.txt`
+- `.json`
+- `.log`
+- `.csv`
+- `.md` (aktuell als Plain-Text)
+
+Für diese Formate:
+
+- Anzeige im integrierten Text-Viewer
+- Suche
+- Alles kopieren & Teilen
+- Bearbeitung und **Speichern unter…**
+
+### Neues Dokument erstellen
+
+Über das Overflow-Menü → **Neu**:
+
+- Neues TXT
+- Neues JSON
+- Neues LOG
+- Neues CSV
+- Neues MD
 
 ## Sprache
 
@@ -44,7 +63,5 @@
 
 ## Roadmap
 
-- PDF-Volltextsuche (optional)
-- PDF-Export
-- Eigenes PDF schreiben
+- Optional: Markdown-Rendering
 - Vorlesen (TTS)
