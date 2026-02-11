@@ -17,12 +17,13 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="12dp"
         android:orientation="horizontal"
+        android:padding="12dp"
         android:weightSum="2">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonOpen"
+            style="@style/Widget.OfflineDocxXlsxReader.TopActionButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -30,10 +31,11 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonCopy"
+            style="@style/Widget.OfflineDocxXlsxReader.TopActionButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_marginStart="8dp"
+            android:layout_weight="1"
             android:text="@string/button_copy_all" />
 
     </LinearLayout>
@@ -66,13 +68,28 @@
             android:background="@color/content_view_background"
             android:padding="8dp" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/pdfRecyclerView"
+        <LinearLayout
+            android:id="@+id/editorContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/content_view_background"
-            android:padding="8dp"
-            android:clipToPadding="false"
-            android:visibility="gone" />
+            android:orientation="vertical"
+            android:padding="12dp"
+            android:visibility="gone">
+
+            <EditText
+                android:id="@+id/editor"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:gravity="top|start"
+                android:hint="@string/editor_hint"
+                android:inputType="textMultiLine"
+                android:overScrollMode="ifContentScrolls"
+                android:scrollbars="vertical"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textColorHint="?android:attr/textColorHint"
+                android:textSize="16sp" />
+        </LinearLayout>
     </FrameLayout>
 </LinearLayout>
