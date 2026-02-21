@@ -1,5 +1,6 @@
 package com.example.offlinedocxxlsxreader
 
+import org.apache.poi.xwpf.usermodel.BodyElementType
 import org.apache.poi.xwpf.usermodel.IBodyElement
 import org.apache.poi.xwpf.usermodel.XWPFDocument
 import org.apache.poi.xwpf.usermodel.XWPFParagraph
@@ -16,7 +17,7 @@ object DocxTextExtractor {
             // Wichtig: bodyElements hält die Reihenfolge aus dem Dokument
             for (el: IBodyElement in doc.bodyElements) {
                 when (el.elementType) {
-                    IBodyElement.ElementType.PARAGRAPH -> {
+                    BodyElementType.PARAGRAPH -> {
                         val p = el as XWPFParagraph
                         val text = p.text?.trimEnd().orEmpty()
                         if (text.isNotBlank()) {
@@ -27,7 +28,7 @@ object DocxTextExtractor {
                         }
                     }
 
-                    IBodyElement.ElementType.TABLE -> {
+                    BodyElementType.TABLE -> {
                         val table = el as XWPFTable
                         appendTable(table, sb)
                         sb.append("\n") // Abstand nach Tabellenblock
