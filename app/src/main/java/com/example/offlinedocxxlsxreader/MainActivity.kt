@@ -600,14 +600,9 @@ class MainActivity : AppCompatActivity() {
                 printDone = false
                 webView.webViewClient = object : WebViewClient() {
                     override fun onPageFinished(view: WebView, url: String?) {
-                        if (printDone) return
-                        printDone = true
-                        val jobName = "Offline Reader - Text"
-                        val printManager = getSystemService(Context.PRINT_SERVICE) as PrintManager
-                        val printAdapter = view.createPrintDocumentAdapter(jobName)
-                        printManager.print(jobName, printAdapter, PrintAttributes.Builder().build())
-                        view.webViewClient = WebViewClient()
-                        printWebView = null
+                        view.postVisualStateCallback(0) {
+                            startPrint(view)
+                        }
                     }
                 }
                 webView.loadDataWithBaseURL(
@@ -624,6 +619,19 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, getString(R.string.toast_open_file_first), Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    private fun startPrint(view: WebView) {
+        if (printDone) return
+        printDone = true
+
+        val jobName = "Offline Reader - Text"
+        val printManager = getSystemService(Context.PRINT_SERVICE) as PrintManager
+        val printAdapter = view.createPrintDocumentAdapter(jobName)
+        printManager.print(jobName, printAdapter, PrintAttributes.Builder().build())
+
+        view.webViewClient = WebViewClient()
+        printWebView = null
     }
 
     private fun readTextFromUriUtf8(uri: Uri?): String? {
