@@ -600,9 +600,11 @@ class MainActivity : AppCompatActivity() {
                 printDone = false
                 webView.webViewClient = object : WebViewClient() {
                     override fun onPageFinished(view: WebView, url: String?) {
-                        view.postVisualStateCallback(0) {
-                            startPrint(view)
-                        }
+                        view.postVisualStateCallback(0L, object : WebView.VisualStateCallback() {
+                            override fun onComplete(requestId: Long) {
+                                startPrint(view)
+                            }
+                        })
                     }
                 }
                 webView.loadDataWithBaseURL(
