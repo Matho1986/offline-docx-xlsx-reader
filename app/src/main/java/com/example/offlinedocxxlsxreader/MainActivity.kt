@@ -48,6 +48,7 @@ class MainActivity : AppCompatActivity() {
     private var textSearchMatches: List<IntRange> = emptyList()
     private var textSearchIndex = -1
     private var printWebView: WebView? = null
+    private var printDone = false
 
     private val viewerPreferences by lazy {
         getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -596,13 +597,16 @@ class MainActivity : AppCompatActivity() {
                     settings.javaScriptEnabled = false
                 }
                 printWebView = webView
+                printDone = false
                 webView.webViewClient = object : WebViewClient() {
                     override fun onPageFinished(view: WebView, url: String?) {
+                        if (printDone) return
+                        printDone = true
                         val jobName = "Offline Reader - Text"
                         val printManager = getSystemService(Context.PRINT_SERVICE) as PrintManager
                         val printAdapter = view.createPrintDocumentAdapter(jobName)
                         printManager.print(jobName, printAdapter, PrintAttributes.Builder().build())
-                        view.webViewClient = null
+                        view.webViewClient = WebViewClient()
                         printWebView = null
                     }
                 }
