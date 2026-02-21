@@ -9,10 +9,13 @@ import android.os.Bundle
 import android.print.PrintAttributes
 import android.print.PrintManager
 import android.text.InputType
+import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -44,6 +47,7 @@ class MainActivity : AppCompatActivity() {
     private var searchCountView: TextView? = null
     private var textSearchMatches: List<IntRange> = emptyList()
     private var textSearchIndex = -1
+    private var printWebView: WebView? = null
 
     private val viewerPreferences by lazy {
         getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -558,7 +562,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun printCurrentContent() {
-        if (isFinishing || isDestroyed) return
+        if (isFinishing || isDestroyed) {
+            Log.w(TAG, "printCurrentContent skipped: activity finishing=$isFinishing destroyed=$isDestroyed")
+            return
+        }
 
         when (currentFileType) {
             FILE_TYPE_DOCX, FILE_TYPE_XLSX -> {
@@ -569,13 +576,36 @@ class MainActivity : AppCompatActivity() {
             }
 
             FILE_TYPE_TEXT -> {
-                val content = binding.editor.text?.toString().orEmpty()
+                val extension = currentTextExtension?.lowercase(Locale.ROOT)
+                val content = when (extension) {
+                    "txt", "json" -> readTextFromUriUtf8(currentUri) ?: binding.editor.text?.toString().orEmpty()
+                    "log", "csv", "md", null -> binding.editor.text?.toString().orEmpty()
+                    else -> {
+                        Log.w(TAG, "Print unsupported text extension: $extension")
+                        Toast.makeText(this, getString(R.string.toast_print_unavailable), Toast.LENGTH_SHORT).show()
+                        return
+                    }
+                }
                 if (content.isBlank()) {
+                    Log.w(TAG, "Print unavailable: empty text content for extension=$extension")
                     Toast.makeText(this, getString(R.string.toast_print_unavailable), Toast.LENGTH_SHORT).show()
                     return
                 }
-                val webView = android.webkit.WebView(this)
-                webView.settings.javaScriptEnabled = false
+
+                val webView = WebView(this).apply {
+                    settings.javaScriptEnabled = false
+                }
+                printWebView = webView
+                webView.webViewClient = object : WebViewClient() {
+                    override fun onPageFinished(view: WebView, url: String?) {
+                        val jobName = "Offline Reader - Text"
+                        val printManager = getSystemService(Context.PRINT_SERVICE) as PrintManager
+                        val printAdapter = view.createPrintDocumentAdapter(jobName)
+                        printManager.print(jobName, printAdapter, PrintAttributes.Builder().build())
+                        view.webViewClient = null
+                        printWebView = null
+                    }
+                }
                 webView.loadDataWithBaseURL(
                     "about:blank",
                     HtmlTemplates.wrap("<pre>${escapeHtml(content)}</pre>"),
@@ -583,18 +613,22 @@ class MainActivity : AppCompatActivity() {
                     "utf-8",
                     null
                 )
-                webView.post {
-                    val jobName = "Offline Reader - Text"
-                    val printManager = getSystemService(Context.PRINT_SERVICE) as PrintManager
-                    val printAdapter = webView.createPrintDocumentAdapter(jobName)
-                    printManager.print(jobName, printAdapter, PrintAttributes.Builder().build())
-                }
             }
 
             else -> {
+                Log.w(TAG, "Print unsupported file type: $currentFileType")
                 Toast.makeText(this, getString(R.string.toast_open_file_first), Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    private fun readTextFromUriUtf8(uri: Uri?): String? {
+        if (uri == null) return null
+        return runCatching {
+            contentResolver.openInputStream(uri)?.bufferedReader(Charsets.UTF_8)?.use { it.readText() }
+        }.onFailure {
+            Log.w(TAG, "Failed reading text for print from URI=$uri", it)
+        }.getOrNull()
     }
 
     private fun showFontSizeDialog() {
@@ -745,6 +779,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
+        private const val TAG = "MainActivity"
         private const val MIME_DOCX = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         private const val MIME_XLSX = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         private const val MIME_TEXT_PLAIN = "text/plain"
